@@ -1,7 +1,6 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const { exec } = require('child_process');
 
 const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -28,29 +27,11 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (req.url.startsWith('/api/')) {
-    const options = {
-      hostname: 'localhost',
-      port: 11434,
-      path: req.url,
-      method: req.method,
-      headers: req.headers,
-    };
-
-    const proxyReq = http.request(options, (proxyRes) => {
-      res.writeHead(proxyRes.statusCode, proxyRes.headers);
-      proxyRes.pipe(res);
-    });
-
-    req.pipe(proxyReq);
-    return;
-  }
-
   res.writeHead(404);
   res.end('Not found');
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
